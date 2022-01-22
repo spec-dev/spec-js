@@ -11,8 +11,8 @@ test('it should create the client connection', async () => {
     expect(spec).toBeInstanceOf(SpecClient)
 })
 
-test('It should connect', async () => {
-    const { session } = await spec.auth.connect()
-    console.log(session)
-    expect(session).not.toBeNull()
-})
+// test('It should connect', async () => {
+//     const { session } = await spec.auth.connect()
+//     console.log(session)
+//     expect(session).not.toBeNull()
+// })

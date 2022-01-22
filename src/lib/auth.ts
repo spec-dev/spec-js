@@ -16,24 +16,26 @@ export class AuthClient extends SpecAuthClient {
         error: ApiError | null
     }> {
         try {
+            // Connect to the user's wallet.
             await this.wallet.connect()
 
-            // Get current account address.
-            const address = this.wallet.getCurrentAddress()
+            // Get the user's current account address.
+            const address = await this.wallet.getCurrentAddress()
             if (!address) throw 'Failed to retrieve current wallet address.'
 
-            // Initialize auth flow by requesting a nonce-based message to sign.
+            // Initialize the auth flow by requesting a nonce-based message to sign.
             const { data, error: initError } = await this.init(address)
             if (initError) throw initError
             if (!data?.message) throw 'Failed to retrieve message to sign.'
 
             // Sign the message with the user's current account.
             const signature = await this.wallet.signMessage(address, data.message)
+            if (!signature) throw 'Failed to sign user auth message.'
 
-            // Verify the signature to sign in.
+            // Verify the signature in exchange for a new session.
             const { session, isNewUser, error: verifyError } = await this.verify(address, signature)
             if (verifyError) throw verifyError
-            if (!session) throw 'Error acquiring new user session.'
+            if (!session) throw 'Failed to verify user signature.'
 
             return { session, isNewUser, error: null }
         } catch (e) {

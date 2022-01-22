@@ -1,4 +1,4 @@
-import SpecClient from './SpecClient'
+import SpecClient from './client'
 import { SpecClientOptions } from './lib/types'
 import { User as AuthUser, Session as AuthSession } from '@spec/auth-js'
 
