@@ -31,7 +31,8 @@
         "test": "jest --runInBand"
     },
     "dependencies": {
-        "@spec/auth-js": "^0.0.1"
+        "@spec/auth-js": "^0.0.1",
+        "@spec/wallet-js": "^0.0.1"
     },
     "devDependencies": {
         "@types/jest": "^26.0.13",

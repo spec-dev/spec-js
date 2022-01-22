@@ -1,7 +1,8 @@
-import { SpecAuthClient } from '@spec/auth-js'
+import { AuthClient } from './lib/auth'
+import { SpecWalletClient } from '@spec/wallet-js'
 import { DEFAULT_HEADERS } from './lib/constants'
 import { stripTrailingSlash } from './lib/helpers'
-import { Fetch, GenericObject, SpecClientOptions } from './lib/types'
+import { Fetch, GenericObject, SpecClientOptions, WalletClientOptions } from './lib/types'
 
 const DEFAULT_OPTIONS = {
     schema: 'public',
@@ -16,10 +17,12 @@ const DEFAULT_OPTIONS = {
  * A Javascript client for interacting with your Spec database and services.
  */
 export default class SpecClient {
+    wallet: SpecWalletClient
+
     /**
      * Spec Auth allows you to create and manage user sessions for access to data that is secured by access policies.
      */
-    auth: SpecAuthClient
+    auth: AuthClient
 
     protected schema: string
     protected graphUrl: string
@@ -38,6 +41,7 @@ export default class SpecClient {
      * @param options.persistSession Set to "true" if you want to automatically save the user session into local storage.
      * @param options.headers Any additional headers to send with each network request.
      * @param options.fetch A custom fetch implementation.
+     * @param options.walletOptions
      */
     constructor(protected specUrl: string, protected specKey: string, options?: SpecClientOptions) {
         if (!specUrl) throw new Error('specUrl is required.')
@@ -52,7 +56,20 @@ export default class SpecClient {
         this.fetch = settings.fetch
         this.headers = { ...DEFAULT_HEADERS, ...options?.headers }
 
+        this.wallet = this._initSpecWalletClient(settings.walletOptions || {})
         this.auth = this._initSpecAuthClient(settings)
+    }
+
+    private _initSpecWalletClient({
+        providerOptions,
+        cacheProvider,
+        disableInjectedProvider,
+    }: WalletClientOptions) {
+        return new SpecWalletClient({
+            providerOptions,
+            cacheProvider,
+            disableInjectedProvider,
+        })
     }
 
     private _initSpecAuthClient({
@@ -66,7 +83,7 @@ export default class SpecClient {
             Authorization: `Bearer ${this.specKey}`,
             apikey: `${this.specKey}`,
         }
-        return new SpecAuthClient({
+        return new AuthClient(this.wallet, {
             url: this.authUrl,
             headers: { ...headers, ...authHeaders },
             autoRefreshToken,

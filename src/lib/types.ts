@@ -1,8 +1,11 @@
 import { SpecAuthClient } from '@spec/auth-js'
+import { SpecWalletClient } from '@spec/wallet-js'
 
-type SpecAuthClientParams = ConstructorParameters<typeof SpecAuthClient>[0]
+type SpecAuthClientOptions = ConstructorParameters<typeof SpecAuthClient>[0]
+type SpecWalletClientOptions = ConstructorParameters<typeof SpecWalletClient>[0]
 
-export interface SpecAuthClientOptions extends SpecAuthClientParams {}
+export interface AuthClientOptions extends SpecAuthClientOptions {}
+export interface WalletClientOptions extends SpecWalletClientOptions {}
 
 export type GenericObject = { [key: string]: string }
 
@@ -28,9 +31,17 @@ export type SpecClientOptions = {
     /**
      * A storage provider. Used to store the logged in session.
      */
-    localStorage?: SpecAuthClientOptions['localStorage']
+    localStorage?: AuthClientOptions['localStorage']
+
+    walletOptions?: WalletClientOptions
+
     /**
      * A custom `fetch` implementation.
      */
     fetch?: Fetch
+}
+
+export interface ApiError {
+    message: string
+    status: number
 }
