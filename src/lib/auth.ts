@@ -29,7 +29,7 @@ export class AuthClient extends SpecAuthClient {
             if (!data?.message) throw 'Failed to retrieve message to sign.'
 
             // Sign the message with the user's current account.
-            const signature = await this.wallet.signMessage(address, data.message)
+            const signature = await this.wallet.signMessage(address, data.message, '')
             if (!signature) throw 'Failed to sign user auth message.'
 
             // Verify the signature in exchange for a new session.
