@@ -1,5 +1,7 @@
 import { AuthClient } from './lib/auth'
 import { SpecWalletClient } from '@spec/wallet-js'
+import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { DEFAULT_HEADERS } from './lib/constants'
 import { stripTrailingSlash } from './lib/helpers'
 import { Fetch, GenericObject, SpecClientOptions, WalletClientOptions } from './lib/types'
@@ -23,6 +25,8 @@ export default class SpecClient {
      * Spec Auth allows you to create and manage user sessions for access to data that is secured by access policies.
      */
     auth: AuthClient
+
+    graph: ApolloClient<NormalizedCacheObject>
 
     protected schema: string
     protected graphUrl: string
@@ -50,21 +54,22 @@ export default class SpecClient {
         const _specUrl = stripTrailingSlash(specUrl)
         const settings = { ...DEFAULT_OPTIONS, ...options }
 
-        this.graphUrl = `${_specUrl}/graph/v1`
         this.authUrl = `${_specUrl}/auth/v1`
+        this.graphUrl = `${_specUrl}/graph/v1`
         this.schema = settings.schema
         this.fetch = settings.fetch
         this.headers = { ...DEFAULT_HEADERS, ...options?.headers }
 
         this.wallet = this._initSpecWalletClient(settings.walletOptions || {})
         this.auth = this._initSpecAuthClient(settings)
+        this.graph = this._initSpecGraphClient()
     }
 
     private _initSpecWalletClient({
         providerOptions,
         cacheProvider,
         disableInjectedProvider,
-    }: WalletClientOptions) {
+    }: WalletClientOptions): SpecWalletClient {
         return new SpecWalletClient({
             providerOptions,
             cacheProvider,
@@ -78,7 +83,7 @@ export default class SpecClient {
         localStorage,
         headers,
         fetch,
-    }: SpecClientOptions) {
+    }: SpecClientOptions): AuthClient {
         const authHeaders = {
             Authorization: `Bearer ${this.specKey}`,
             apikey: `${this.specKey}`,
@@ -90,6 +95,20 @@ export default class SpecClient {
             persistSession,
             localStorage,
             fetch,
+        })
+    }
+
+    private _initSpecGraphClient(): ApolloClient<NormalizedCacheObject> {
+        const httpLink = createHttpLink({ uri: this.graphUrl })
+        const authLink = setContext((_, { headers }) => ({
+            headers: {
+                ...headers,
+                ...this._getAuthHeaders(),
+            },
+        }))
+        return new ApolloClient({
+            link: authLink.concat(httpLink),
+            cache: new InMemoryCache(),
         })
     }
 
