@@ -1,5 +1,5 @@
-import { SpecAuthClient } from '@spec/auth-js'
-import { SpecWalletClient } from '@spec/wallet-js'
+import { SpecAuthClient } from '@spec/auth-client'
+import { SpecWalletClient } from '@spec/wallet-client'
 
 type SpecAuthClientOptions = ConstructorParameters<typeof SpecAuthClient>[0]
 type SpecWalletClientOptions = ConstructorParameters<typeof SpecWalletClient>[0]

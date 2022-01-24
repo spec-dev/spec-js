@@ -1,11 +1,12 @@
 {
-    "name": "@spec/spec-js",
+    "name": "@spec/client",
     "version": "0.0.1",
     "description": "Spec JavaScript client",
     "keywords": [
         "javascript",
         "typescript",
-        "spec"
+        "spec",
+        "client"
     ],
     "homepage": "https://github.com/spec-dev/spec-js",
     "bugs": "https://github.com/spec-dev/spec-js/issues",
@@ -26,7 +27,7 @@
         "build": "genversion src/lib/version.ts --es6 && run-s clean format build:*",
         "build:main": "tsc -p tsconfig.json",
         "build:module": "tsc -p tsconfig.module.json",
-        "types-generate": "dts-gen -m '@spec/spec-js' -s",
+        "types-generate": "dts-gen -m '@spec/client' -s",
         "test": "jest --runInBand"
     },
     "dependencies": {

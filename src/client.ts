@@ -1,6 +1,13 @@
 import { AuthClient } from './lib/auth'
-import { SpecWalletClient } from '@spec/wallet-js'
-import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
+import { SpecWalletClient } from '@spec/wallet-client'
+import { SpecServiceClient } from '@spec/service-client'
+import {
+    ApolloClient,
+    createHttpLink,
+    InMemoryCache,
+    NormalizedCacheObject,
+    ApolloQueryResult,
+} from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { DEFAULT_HEADERS } from './lib/constants'
 import { stripTrailingSlash } from './lib/helpers'
@@ -19,18 +26,19 @@ const DEFAULT_OPTIONS = {
  * A Javascript client for interacting with your Spec database and services.
  */
 export default class SpecClient {
-    wallet: SpecWalletClient
-
     /**
      * Spec Auth allows you to create and manage user sessions for access to data that is secured by access policies.
      */
     auth: AuthClient
 
+    wallet: SpecWalletClient
+
     graph: ApolloClient<NormalizedCacheObject>
 
     protected schema: string
-    protected graphUrl: string
     protected authUrl: string
+    protected graphUrl: string
+    protected serviceUrl: string
     protected fetch?: Fetch
     protected headers: {
         [key: string]: string
@@ -56,6 +64,7 @@ export default class SpecClient {
 
         this.authUrl = `${_specUrl}/auth/v1`
         this.graphUrl = `${_specUrl}/graph/v1`
+        this.serviceUrl = `${_specUrl}/service/v1`
         this.schema = settings.schema
         this.fetch = settings.fetch
         this.headers = { ...DEFAULT_HEADERS, ...options?.headers }
@@ -63,6 +72,18 @@ export default class SpecClient {
         this.wallet = this._initSpecWalletClient(settings.walletOptions || {})
         this.auth = this._initSpecAuthClient(settings)
         this.graph = this._initSpecGraphClient()
+    }
+
+    query(query: any, options = {}): Promise<ApolloQueryResult<any>> {
+        return this.graph.query({ query, ...options })
+    }
+
+    service(id: string): SpecServiceClient {
+        return new SpecServiceClient(id, {
+            url: this.serviceUrl,
+            headers: this._getAuthHeaders(),
+            fetch: this.fetch,
+        })
     }
 
     private _initSpecWalletClient({

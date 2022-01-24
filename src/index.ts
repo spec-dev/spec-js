@@ -1,6 +1,6 @@
 import SpecClient from './client'
 import { SpecClientOptions } from './lib/types'
-import { User as AuthUser, Session as AuthSession } from '@spec/auth-js'
+import { User as AuthUser, Session as AuthSession } from '@spec/auth-client'
 export * from '@apollo/client'
 
 /**
