@@ -1,4 +1,4 @@
-import { SpecAuthClient, Session } from '@spec.dev/auth-client'
+import { SpecAuthClient, Session, User } from '@spec.dev/auth-client'
 import { SpecWalletClient } from '@spec.dev/wallet-client'
 import { AuthClientOptions, ApiError } from './types'
 
@@ -12,6 +12,7 @@ export class AuthClient extends SpecAuthClient {
 
     async connect(): Promise<{
         session: Session | null
+        user: User | null
         isNewUser: boolean
         error: ApiError | null
     }> {
@@ -34,13 +35,18 @@ export class AuthClient extends SpecAuthClient {
             if (!signature) throw 'Failed to sign user auth message.'
 
             // Verify the signature in exchange for a new session.
-            const { session, isNewUser, error: verifyError } = await this.verify(address, signature)
+            const {
+                session,
+                user,
+                isNewUser,
+                error: verifyError,
+            } = await this.verify(address, signature)
             if (verifyError) throw verifyError
             if (!session) throw 'Failed to verify user signature.'
 
-            return { session, isNewUser, error: null }
+            return { session, user, isNewUser, error: null }
         } catch (err) {
-            return { session: null, isNewUser: false, error: err as ApiError }
+            return { session: null, user: null, isNewUser: false, error: err as ApiError }
         }
     }
 }
