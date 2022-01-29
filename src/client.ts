@@ -1,6 +1,6 @@
 import { AuthClient } from './lib/auth'
-import { SpecWalletClient } from '@spec/wallet-client'
-import { SpecServiceClient } from '@spec/service-client'
+import { SpecWalletClient } from '@spec.dev/wallet-client'
+import { SpecServiceClient } from '@spec.dev/service-client'
 import {
     ApolloClient,
     createHttpLink,
@@ -45,7 +45,7 @@ export default class SpecClient {
     }
 
     /**
-     * Create a new client for use in the browser.
+     * Create a new Spec client instance.
      * @param specUrl The unique Spec URL which is supplied when you create a new project in your project dashboard.
      * @param specKey The unique Spec Key which is supplied when you create a new project in your project dashboard.
      * @param options.schema You can switch in between schemas. The schema needs to be on the list of exposed schemas inside Spec.
@@ -53,7 +53,7 @@ export default class SpecClient {
      * @param options.persistSession Set to "true" if you want to automatically save the user session into local storage.
      * @param options.headers Any additional headers to send with each network request.
      * @param options.fetch A custom fetch implementation.
-     * @param options.walletOptions
+     * @param options.wallet Spec wallet client options.
      */
     constructor(protected specUrl: string, protected specKey: string, options?: SpecClientOptions) {
         if (!specUrl) throw new Error('specUrl is required.')
@@ -69,7 +69,7 @@ export default class SpecClient {
         this.fetch = settings.fetch
         this.headers = { ...DEFAULT_HEADERS, ...options?.headers }
 
-        this.wallet = this._initSpecWalletClient(settings.walletOptions || {})
+        this.wallet = this._initSpecWalletClient(settings.wallet || {})
         this.auth = this._initSpecAuthClient(settings)
         this.graph = this._initSpecGraphClient()
     }
@@ -86,16 +86,8 @@ export default class SpecClient {
         })
     }
 
-    private _initSpecWalletClient({
-        providerOptions,
-        cacheProvider,
-        disableInjectedProvider,
-    }: WalletClientOptions): SpecWalletClient {
-        return new SpecWalletClient({
-            providerOptions,
-            cacheProvider,
-            disableInjectedProvider,
-        })
+    private _initSpecWalletClient(walletOptions: WalletClientOptions): SpecWalletClient {
+        return new SpecWalletClient(walletOptions)
     }
 
     private _initSpecAuthClient({

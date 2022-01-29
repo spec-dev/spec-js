@@ -32,9 +32,10 @@ export type SpecClientOptions = {
      * A storage provider. Used to store the logged in session.
      */
     localStorage?: AuthClientOptions['localStorage']
-
-    walletOptions?: WalletClientOptions
-
+    /**
+     * Options to initialize SpecWalletClient with.
+     */
+    wallet?: WalletClientOptions
     /**
      * A custom `fetch` implementation.
      */

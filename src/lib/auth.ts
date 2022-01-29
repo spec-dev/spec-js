@@ -17,7 +17,8 @@ export class AuthClient extends SpecAuthClient {
     }> {
         try {
             // Connect to the user's wallet.
-            await this.wallet.connect()
+            const error = await this.wallet.connect()
+            if (error) throw error
 
             // Get the user's current account address.
             const address = await this.wallet.getCurrentAddress()
@@ -38,8 +39,8 @@ export class AuthClient extends SpecAuthClient {
             if (!session) throw 'Failed to verify user signature.'
 
             return { session, isNewUser, error: null }
-        } catch (e) {
-            return { session: null, isNewUser: false, error: e as ApiError }
+        } catch (err) {
+            return { session: null, isNewUser: false, error: err as ApiError }
         }
     }
 }
