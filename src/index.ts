@@ -1,6 +1,6 @@
 import SpecClient from './client'
-import { SpecClientOptions } from './lib/types'
-import { User as AuthUser, Session as AuthSession } from '@spec/auth-client'
+import { SpecClientOptions, ApiError } from './lib/types'
+import { User, Session } from '@spec.dev/auth-client'
 export * from '@apollo/client'
 
 /**
@@ -14,4 +14,4 @@ const createClient = (
     return new SpecClient(specUrl, specKey, options)
 }
 
-export { createClient, SpecClient, SpecClientOptions, AuthUser, AuthSession }
+export { createClient, SpecClient, SpecClientOptions, ApiError, User, Session }

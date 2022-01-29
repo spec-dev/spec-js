@@ -1,5 +1,5 @@
 {
-    "name": "@spec/client",
+    "name": "@spec.dev/client",
     "version": "0.0.1",
     "description": "Spec JavaScript client",
     "keywords": [
@@ -27,11 +27,14 @@
         "build": "genversion src/lib/version.ts --es6 && run-s clean format build:*",
         "build:main": "tsc -p tsconfig.json",
         "build:module": "tsc -p tsconfig.module.json",
-        "types-generate": "dts-gen -m '@spec/client' -s",
+        "types-generate": "dts-gen -m '@spec.dev/client' -s",
         "test": "jest --runInBand"
     },
     "dependencies": {
         "@apollo/client": "^3.5.7",
+        "@spec.dev/auth-client": "^0.0.1",
+        "@spec.dev/service-client": "^0.0.1",
+        "@spec.dev/wallet-client": "^0.0.1",
         "graphql": "^16.2.0"
     },
     "devDependencies": {
