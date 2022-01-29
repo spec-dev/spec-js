@@ -1,11 +1,10 @@
-import { SpecAuthClient } from '@spec/auth-client'
-import { SpecWalletClient } from '@spec/wallet-client'
+import { SpecAuthClient } from '@spec.dev/auth-client'
+import { SpecWalletClient } from '@spec.dev/wallet-client'
 
 type SpecAuthClientOptions = ConstructorParameters<typeof SpecAuthClient>[0]
-type SpecWalletClientOptions = ConstructorParameters<typeof SpecWalletClient>[0]
-
 export interface AuthClientOptions extends SpecAuthClientOptions {}
-export interface WalletClientOptions extends SpecWalletClientOptions {}
+
+export type WalletClientOptions = ConstructorParameters<typeof SpecWalletClient>[0]
 
 export type GenericObject = { [key: string]: string }
 

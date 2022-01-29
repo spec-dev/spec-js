@@ -1,5 +1,5 @@
-import { SpecAuthClient, Session } from '@spec/auth-client'
-import { SpecWalletClient } from '@spec/wallet-client'
+import { SpecAuthClient, Session } from '@spec.dev/auth-client'
+import { SpecWalletClient } from '@spec.dev/wallet-client'
 import { AuthClientOptions, ApiError } from './types'
 
 export class AuthClient extends SpecAuthClient {
