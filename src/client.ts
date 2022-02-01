@@ -7,6 +7,8 @@ import {
     InMemoryCache,
     NormalizedCacheObject,
     ApolloQueryResult,
+    ApolloError,
+    NetworkStatus,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { DEFAULT_HEADERS } from './lib/constants'
@@ -74,8 +76,17 @@ export default class SpecClient {
         this.graph = this._initSpecGraphClient()
     }
 
-    query(query: any, options = {}): Promise<ApolloQueryResult<any>> {
-        return this.graph.query({ query, ...options })
+    async query(query: any, options = {}): Promise<ApolloQueryResult<any>> {
+        try {
+            return await this.graph.query({ query, ...options })
+        } catch (error) {
+            return {
+                data: null,
+                error: error as ApolloError,
+                loading: false,
+                networkStatus: NetworkStatus.ready,
+            }
+        }
     }
 
     service(id: string): SpecServiceClient {
