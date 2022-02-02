@@ -24,11 +24,19 @@ export type SpecClientOptions = {
      */
     autoRefreshToken?: boolean
     /**
-     * Whether to persist a logged in session to storage.
+     * Whether to persist logged in sessions to storage.
      */
-    persistSession?: boolean
+    persistSessions?: boolean
     /**
-     * A storage provider. Used to store the logged in session.
+     * Whether to recover logged in sessions from storage.
+     */
+    recoverSessions?: boolean
+    /**
+     * Whether to require a cached wallet provider to exist before recovering sessions.
+     */
+    recoveredSessionsRequireCachedProvider?: boolean
+    /**
+     * A storage provider. Used to store the logged in sessions.
      */
     localStorage?: AuthClientOptions['localStorage']
     /**

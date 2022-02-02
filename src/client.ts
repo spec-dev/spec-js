@@ -18,7 +18,9 @@ import { Fetch, GenericObject, SpecClientOptions, WalletClientOptions } from './
 const DEFAULT_OPTIONS = {
     schema: 'public',
     autoRefreshToken: true,
-    persistSession: true,
+    persistSessions: true,
+    recoverSessions: true,
+    recoveredSessionsRequireCachedProvider: true,
     headers: DEFAULT_HEADERS,
 }
 
@@ -52,7 +54,9 @@ export default class SpecClient {
      * @param specKey The unique Spec Key which is supplied when you create a new project in your project dashboard.
      * @param options.schema You can switch in between schemas. The schema needs to be on the list of exposed schemas inside Spec.
      * @param options.autoRefreshToken Set to "true" if you want to automatically refresh the token before expiring.
-     * @param options.persistSession Set to "true" if you want to automatically save the user session into local storage.
+     * @param options.persistSessions Set to "true" if you want to automatically save the user session into local storage.
+     * @param options.recoverSessions Set to "true" if you want to automatically recover sessions from local storage on init.
+     * @param options.recoveredSessionsRequireCachedProvider Set to "true" if you want to require a cached wallet provider to exist before recovering sessions.
      * @param options.headers Any additional headers to send with each network request.
      * @param options.fetch A custom fetch implementation.
      * @param options.wallet Spec wallet client options.
@@ -70,8 +74,18 @@ export default class SpecClient {
         this.schema = settings.schema
         this.fetch = settings.fetch
         this.headers = { ...DEFAULT_HEADERS, ...options?.headers }
-
         this.wallet = this._initSpecWalletClient(settings.wallet || {})
+        const hasCachedProvider = this.wallet.hasCachedProvider
+
+        // Don't recover sessions if a cached provider doesn't exist (and this is the desired behavior).
+        if (settings.recoveredSessionsRequireCachedProvider && !hasCachedProvider) {
+            settings.recoverSessions = false
+        }
+        // Auto-connect if cached provider exists.
+        else if (hasCachedProvider) {
+            this.wallet.connect()
+        }
+
         this.auth = this._initSpecAuthClient(settings)
         this.graph = this._initSpecGraphClient()
     }
@@ -103,7 +117,8 @@ export default class SpecClient {
 
     private _initSpecAuthClient({
         autoRefreshToken,
-        persistSession,
+        persistSessions,
+        recoverSessions,
         localStorage,
         headers,
         fetch,
@@ -116,7 +131,8 @@ export default class SpecClient {
             url: this.authUrl,
             headers: { ...headers, ...authHeaders },
             autoRefreshToken,
-            persistSession,
+            persistSessions,
+            recoverSessions,
             localStorage,
             fetch,
         })
