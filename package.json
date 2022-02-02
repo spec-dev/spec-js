@@ -32,9 +32,9 @@
     },
     "dependencies": {
         "@apollo/client": "^3.5.7",
-        "@spec.dev/auth-client": "^0.0.1",
+        "@spec.dev/auth-client": "file:../auth-js",
         "@spec.dev/service-client": "^0.0.1",
-        "@spec.dev/wallet-client": "^0.0.1",
+        "@spec.dev/wallet-client": "file:../wallet-js",
         "graphql": "^16.2.0"
     },
     "devDependencies": {

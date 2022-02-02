@@ -35,6 +35,16 @@ export class AuthClient extends SpecAuthClient {
         }
     }
 
+    async disconnect(): Promise<{ error: ApiError | null }> {
+        try {
+            // Sign out Spec auth user and disconnect wallet.
+            const [{ error }, _] = await Promise.all([this.signOut(), this.wallet.disconnect()])
+            return { error }
+        } catch (err) {
+            return { error: err as ApiError }
+        }
+    }
+
     private _subscribeToWalletEvents() {
         this.wallet.onStateChange((event, data) => {
             switch (event) {
