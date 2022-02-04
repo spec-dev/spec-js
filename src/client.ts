@@ -7,6 +7,7 @@ import {
     InMemoryCache,
     NormalizedCacheObject,
     ApolloQueryResult,
+    FetchResult,
     ApolloError,
     NetworkStatus,
 } from '@apollo/client'
@@ -90,6 +91,10 @@ export default class SpecClient {
         this.graph = this._initSpecGraphClient()
     }
 
+    async web3() {
+        return await this.wallet.getWeb3()
+    }
+
     async query(query: any, options = {}): Promise<ApolloQueryResult<any>> {
         try {
             return await this.graph.query({ query, ...options })
@@ -99,6 +104,17 @@ export default class SpecClient {
                 error: error as ApolloError,
                 loading: false,
                 networkStatus: NetworkStatus.ready,
+            }
+        }
+    }
+
+    async mutate(mutation: any, options = {}): Promise<FetchResult<any>> {
+        try {
+            return await this.graph.mutate({ mutation, ...options })
+        } catch (error) {
+            return {
+                data: null,
+                errors: [error as any],
             }
         }
     }
