@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "@apollo/client": "^3.5.7",
-        "@spec.dev/auth-client": "^0.0.2",
+        "@spec.dev/auth-client": "^0.0.3",
         "@spec.dev/service-client": "^0.0.3",
         "@spec.dev/wallet-client": "^0.0.3",
         "graphql": "^16.2.0"
