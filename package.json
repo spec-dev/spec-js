@@ -1,6 +1,6 @@
 {
     "name": "@spec.dev/client",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Spec JavaScript client",
     "keywords": [
         "javascript",
@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "@apollo/client": "^3.5.7",
-        "@spec.dev/auth-client": "^0.0.3",
+        "@spec.dev/auth-client": "^0.0.4",
         "@spec.dev/service-client": "^0.0.3",
         "@spec.dev/wallet-client": "^0.0.3",
         "graphql": "^16.2.0"
