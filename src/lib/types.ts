@@ -47,6 +47,18 @@ export type SpecClientOptions = {
      * A custom `fetch` implementation.
      */
     fetch?: Fetch
+    /**
+     * Whether your app is currently running in a local dev environment.
+     */
+    localDev?: boolean
+    /**
+     * Spec API Key to use with local webhooks.
+     */
+    localApiKey?: string
+    /**
+     * The URL to hit with a webhook after auth has succeeded in local development.
+     */
+    localAuthHook?: string
 }
 
 export interface ApiError {

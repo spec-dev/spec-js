@@ -23,6 +23,7 @@ const DEFAULT_OPTIONS = {
     recoverSessions: true,
     recoveredSessionsRequireCachedProvider: true,
     headers: DEFAULT_HEADERS,
+    localDev: false,
 }
 
 /**
@@ -61,6 +62,9 @@ export default class SpecClient {
      * @param options.headers Any additional headers to send with each network request.
      * @param options.fetch A custom fetch implementation.
      * @param options.wallet Spec wallet client options.
+     * @param options.localDev A boolean indicating whether your app is currently running in a local dev environment.
+     * @param options.localApiKey Spec API Key to use with local webhooks.
+     * @param options.localAuthHook The URL to hit with a webhook after auth has succeeded in local development.
      */
     constructor(protected specUrl: string, protected specKey: string, options?: SpecClientOptions) {
         if (!specUrl) throw new Error('specUrl is required.')
@@ -138,6 +142,9 @@ export default class SpecClient {
         localStorage,
         headers,
         fetch,
+        localDev,
+        localApiKey,
+        localAuthHook,
     }: SpecClientOptions): AuthClient {
         const authHeaders = {
             Authorization: `Bearer ${this.specKey}`,
@@ -151,6 +158,9 @@ export default class SpecClient {
             recoverSessions,
             localStorage,
             fetch,
+            localDev,
+            localApiKey,
+            localAuthHook,
         })
     }
 
