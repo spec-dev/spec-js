@@ -1,5 +1,7 @@
 # Spec JavaScript Client
 
+The JavaScript client for Spec.
+
 # Installation
 
 ```
@@ -8,7 +10,7 @@ $ npm install --save @spec.dev/client
 
 # Initialization
 
-### Create the Spec client
+To create a new client that communicates with your Spec project's API:
 
 ```javascript
 import { createClient } from '@spec.dev/client'
@@ -18,23 +20,21 @@ const specKey = 'public-anon-key'
 const spec = createClient(specUrl, specKey)
 ```
 
-# Auth
+# Spec Auth / Wallet Sign-in
 
-### Signing in a user
+Enabling wallet sign-in for your users is as simple as running the following function:
 
 ```javascript
 const { user, session, isNewUser, error } = await spec.auth.connect()
 ```
 
-### Signing out a user
+The following can be run to sign the current user out of all active sessions.
 
 ```javascript
 const { error } = await spec.auth.disconnect()
 ```
 
 # GraphQL
-
-### Query your users and their DIDs
 
 ```javascript
 import { gql } from '@spec.dev/client'
@@ -62,7 +62,7 @@ const { data, error } = await spec.query(GET_USER_DID_PAIRS)
 
 ### Services
 
-### Call a service
+### Calling a service
 
 ```javascript
 const { data, error } = spec.service('<service-name>').perform(...args)
